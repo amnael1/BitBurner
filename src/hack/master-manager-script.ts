@@ -6,28 +6,28 @@ const MASTER_SERVERS = [
     "home"
 ]
 
-export async function main(ns : NS) : Promise<void> {
+export async function main(ns: NS): Promise<void> {
 
-	killScriptsOnMaster(ns);
+    killScriptsOnMaster(ns);
 
-	await ns.sleep(1000);
+    await ns.sleep(1000);
 
-	let counter = 0;
+    let counter = 0;
 
-	for (const item of getServersWithAdminRights(ns, MASTER_SERVERS)) {
-		if (counter >= MAX_SERVERS_TO_HACK) {
-			break;
-		}
-        
+    for (const item of getServersWithAdminRights(ns, MASTER_SERVERS)) {
+        if (counter >= MAX_SERVERS_TO_HACK) {
+            break;
+        }
+
         ns.tprintf("--------------------------------");
 
-		killScripts(ns, item.target);
-		executeManagerScript(ns, item.master, item.target);
+        killScripts(ns, item.target);
+        executeManagerScript(ns, item.master, item.target);
 
-		counter++;
+        counter++;
 
-		await ns.sleep(100);
-	}
+        await ns.sleep(100);
+    }
 
 }
 
