@@ -3,7 +3,7 @@ import { NS } from '@ns'
 const MONEY_TO_STEAL_IN_PROCENT = 30;
 const GROWTH_MULTIPLIER = 1.5;
 const SLEEP_TIMEOUT_BUFFER = 500;
-
+ß
 export async function main(ns: NS): Promise<void> {
 
     while (true) {
