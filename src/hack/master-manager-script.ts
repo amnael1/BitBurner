@@ -1,5 +1,6 @@
 import { NS } from '@ns'
 import { getServersWithAdminRights } from 'libs/helpers';
+import { ServerTarget } from '/models/server-target';
 
 const MAX_SERVERS_TO_HACK = 1;
 const MASTER_SERVERS = [
@@ -8,13 +9,15 @@ const MASTER_SERVERS = [
 
 export async function main(ns: NS): Promise<void> {
 
-    killScriptsOnMaster(ns);
+    const serversToHack = getServersWithAdminRights(ns, MASTER_SERVERS);
+
+    killScriptsOnMaster(ns, serversToHack);
 
     await ns.sleep(1000);
 
     let counter = 0;
 
-    for (const item of getServersWithAdminRights(ns, MASTER_SERVERS)) {
+    for (const item of serversToHack) {
         if (counter >= MAX_SERVERS_TO_HACK) {
             break;
         }
@@ -41,10 +44,10 @@ function killScripts(ns: NS, host: string): void {
     ns.tprintf("Scripts killed on server [ %t ] ", ns.killall(host));
 }
 
-function killScriptsOnMaster(ns: NS): void {
+function killScriptsOnMaster(ns: NS, serversToHack: ServerTarget[]): void {
     ns.tprintf("Scripts killed on [ home ] => [ %t ] ", ns.killall('home', true));
 
-    for (const item of getMasterServers()) {
+    for (const item of getMasterServers(serversToHack)) {
         if (item.master === "home") {
             continue;
         }
@@ -53,10 +56,10 @@ function killScriptsOnMaster(ns: NS): void {
     }
 }
 
-function getMasterServers(): string[] {
+function getMasterServers(serversToHack: ServerTarget[]): string[] {
     const uniqueIds = [];
 
-    return SERVERS_TO_HACK.filter(element => {
+    return serversToHack.filter(element => {
         const isDuplicate = uniqueIds.includes(element.master);
 
         if (!isDuplicate) {
