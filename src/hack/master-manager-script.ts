@@ -1,6 +1,5 @@
 import { NS } from '@ns'
 import { getServersWithAdminRights } from 'libs/helpers';
-import { ServerTarget } from 'models/server-target';
 
 const MAX_SERVERS_TO_HACK = 1;
 const MASTER_SERVERS = [
@@ -15,7 +14,7 @@ export async function main(ns : NS) : Promise<void> {
 
 	let counter = 0;
 
-	for (const item of findServersWithAdminRights()) {
+	for (const item of getServersWithAdminRights(ns, MASTER_SERVERS)) {
 		if (counter >= MAX_SERVERS_TO_HACK) {
 			break;
 		}
@@ -72,28 +71,4 @@ function getMasterServers(): string[] {
 
 function getManagerScriptName(): string {
     return "/hack/manager-script.js";
-}
-
-function findServersWithAdminRights(): ServerTarget[] {
-    const foundServers = getServersWithAdminRights();
-
-    let masterServerCounter = 0;
-    const servers = [];
-
-    for (const server of foundServers) {
-        servers.push({
-            master: MASTER_SERVERS[masterServerCounter],
-            target: server
-        });
-
-        if (MASTER_SERVERS.length > 1) {
-            if (MASTER_SERVERS.length === (masterServerCounter + 1)) {
-                masterServerCounter = 0;
-            } else {
-                masterServerCounter++;
-            }
-        }
-    }
-
-    return servers;
 }
