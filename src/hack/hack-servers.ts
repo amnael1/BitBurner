@@ -9,47 +9,47 @@ export async function main(ns: NS): Promise<void> {
 
 }
 
-function hackSsh(ns: NS, server: string) {
+function hackSsh(ns: NS, server: string): void {
     if (ns.fileExists("BruteSSH.exe")) {
         ns.tprintf("[ %s ] Hack SSH...", server);
         ns.brutessh(server);
     }
 }
 
-function hackFtp(ns: NS, server: string) {
+function hackFtp(ns: NS, server: string): void {
     if (ns.fileExists("FTPCrack.exe")) {
         ns.tprintf("[ %s ] Hack FTP...", server);
         ns.ftpcrack(server);
     }
 }
 
-function hackSmtp(ns: NS, server: string) {
+function hackSmtp(ns: NS, server: string): void {
     if (ns.fileExists("relaySMTP.exe")) {
         ns.tprintf("[ %s ] Hack SMTP...", server);
         ns.relaysmtp(server);
     }
 }
 
-function hackHttp(ns: NS, server: string) {
+function hackHttp(ns: NS, server: string): void {
     if (ns.fileExists("HTTPWorm.exe")) {
         ns.tprintf("[ %s ] Hack HTTP...", server);
         ns.httpworm(server);
     }
 }
 
-function hackSql(ns: NS, server: string) {
+function hackSql(ns: NS, server: string): void {
     if (ns.fileExists("SQLInject.exe")) {
         ns.tprintf("[ %s ] Hack SQL...", server);
         ns.sqlinject(server);
     }
 }
 
-function runNuke(ns: NS, server: string) {
+function runNuke(ns: NS, server: string): void {
     ns.tprintf("[ %s ] Get root access...", server);
     ns.nuke(server);
 }
 
-function hackPorts(ns: NS, server: string) {
+function hackPorts(ns: NS, server: string): void {
     hackSsh(ns, server);
     hackFtp(ns, server);
     hackSmtp(ns, server);
@@ -57,7 +57,7 @@ function hackPorts(ns: NS, server: string) {
     hackSql(ns, server);
 }
 
-function getExistingHacksOnHome(ns: NS) {
+function getExistingHacksOnHome(ns: NS): number {
     let existingHacks = 0;
 
     if (ns.fileExists("brutessh.exe", "home")) {
@@ -91,9 +91,8 @@ function getRootAccess(ns: NS, server: string): void {
         return;
     }
 
-    if (ns.hasRootAccess(server) === true) {
+    if (ns.hasRootAccess(server)) {
         logRootServerInfo(ns, server);
-
         return;
     }
 
@@ -109,10 +108,10 @@ function getRootAccess(ns: NS, server: string): void {
     return;
 }
 
-function logRootServerInfo(ns: NS, server: string) {
+function logRootServerInfo(ns: NS, server: string): void {
     const maxRam = ns.getServerMaxRam(server);
 
-    ns.tprintf("*******************")
     ns.tprintf("Root access [ %s ]", server);
     ns.tprintf("Max ram [ %d ]", maxRam);
+    ns.tprintf("*******************")
 }

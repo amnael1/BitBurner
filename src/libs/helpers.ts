@@ -5,7 +5,7 @@ export function getServersWithAdminRights(ns: NS, masterServers: []): ServerTarg
     const foundServers = findServers(ns).filter(server => {
         const serverInfo = ns.getServer(server);
 
-        return serverInfo.hasAdminRights && serverInfo.moneyMax > 0;
+        return serverInfo.hasAdminRights;
     });
 
     return getMasterTargets(foundServers, masterServers);
@@ -56,5 +56,5 @@ function findServers(ns: NS): string[] {
         }
     }
 
-    return serversSeen.filter(server => server !== 'home' && !server.startsWith('server'));
+    return serversSeen.filter(server => server !== 'home' && !server.startsWith('server') && server !== "darkweb");
 }
