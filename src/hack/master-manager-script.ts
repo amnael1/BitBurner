@@ -1,10 +1,11 @@
 import { NS } from '@ns'
 import { getServersWithAdminRights } from 'libs/helpers';
-import { ServerTarget } from '/models/server-target';
+import { HOME_SERVER } from 'libs/constants';
+import { ServerTarget } from 'models/server-target';
 
 const MAX_SERVERS_TO_HACK = 1;
 const MASTER_SERVERS = [
-    "home"
+    HOME_SERVER
 ]
 
 export async function main(ns: NS): Promise<void> {
@@ -48,7 +49,7 @@ function killScriptsOnMaster(ns: NS, serversToHack: ServerTarget[]): void {
     ns.tprintf("Scripts killed on [ home ] => [ %t ] ", ns.killall('home', true));
 
     for (const item of getMasterServers(serversToHack)) {
-        if (item.master === "home") {
+        if (item.master === HOME_SERVER) {
             continue;
         }
 

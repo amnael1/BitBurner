@@ -1,5 +1,6 @@
 import { NS } from '@ns'
 import { ServerTarget } from 'models/server-target';
+import { HOME_SERVER } from 'libs/constants';
 
 export function getServersWithAdminRights(ns: NS, masterServers: []): ServerTarget[] {
     const foundServers = findServers(ns).filter(server => {
@@ -19,6 +20,17 @@ export function getServersWithoutAdminRights(ns: NS): string[] {
 
         return !serverInfo.hasAdminRights && currentPlayerHackingLvl >= serverInfo.requiredHackingSkill;
     });
+}
+
+export function getServerPath(ns: NS, server: string, startServer = HOME_SERVER): string[] {
+    const route = [];
+    const result = [];
+
+    recursiveScan(ns, '', startServer, server, route);
+
+    for (const i in route) {
+        result.push(route[i]);
+    }
 }
 
 function getMasterTargets(foundServers: string[], masterServers: string[]): ServerTarget[] {
@@ -44,7 +56,7 @@ function getMasterTargets(foundServers: string[], masterServers: string[]): Serv
 }
 
 function findServers(ns: NS): string[] {
-    const serversSeen = ['home'];
+    const serversSeen = [HOME_SERVER];
 
     for (let i = 0; i < serversSeen.length; i++) {
         const thisScan = ns.scan(serversSeen[i]);
@@ -56,5 +68,28 @@ function findServers(ns: NS): string[] {
         }
     }
 
-    return serversSeen.filter(server => server !== 'home' && !server.startsWith('server') && server !== "darkweb");
+    return serversSeen.filter(server => server !== HOME_SERVER && !server.startsWith('server') && server !== "darkweb");
+}
+
+function recursiveScan(ns: NS, parent: string, server: string, target: string, route: []): boolean {
+    const children = ns.scan(server);
+    
+    for (const child of children) {
+        if (parent == child) {
+            continue;
+        }
+        
+        if (child == target) {
+            route.unshift(child);
+            route.unshift(server);
+            return true;
+        }
+
+        if (recursiveScan(server, child, target, route)) {
+            route.unshift(server);
+            return true;
+        }
+    }
+
+    return false;
 }
