@@ -4,11 +4,11 @@ import { HOME_SERVER } from 'libs/constants';
 import { ServerTarget } from 'models/server-target';
 
 const MAX_SERVERS_TO_HACK = 1;
-const MASTER_SERVERS = [
-    HOME_SERVER
-]
 
 export async function main(ns: NS): Promise<void> {
+
+    const masterServers = ns.getPurchasedServers();
+    masterServers.push(HOME_SERVER);
 
     const serversToHack = getServersWithAdminRights(ns, MASTER_SERVERS);
 

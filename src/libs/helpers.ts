@@ -1,6 +1,6 @@
 import { NS } from '@ns'
 import { ServerTarget } from 'models/server-target';
-import { HOME_SERVER } from 'libs/constants';
+import { HOME_SERVER, P_SERVER_PREFIX } from 'libs/constants';
 
 export function getServersWithAdminRights(ns: NS, masterServers: []): ServerTarget[] {
     const foundServers = findServers(ns).filter(server => {
@@ -68,7 +68,7 @@ function findServers(ns: NS): string[] {
         }
     }
 
-    return serversSeen.filter(server => server !== HOME_SERVER && !server.startsWith('server') && server !== "darkweb");
+    return serversSeen.filter(server => server !== HOME_SERVER && !server.startsWith(P_SERVER_PREFIX) && server !== "darkweb");
 }
 
 function recursiveScan(ns: NS, parent: string, server: string, target: string, route: []): boolean {

@@ -1,4 +1,5 @@
 import { NS } from '@ns'
+import { P_SERVER_PREFIX } from 'libs/constants';
 
 export async function main(ns: NS): Promise<void> {
     const serverName = ns.args[0];
@@ -9,6 +10,6 @@ export async function main(ns: NS): Promise<void> {
     }
 
     if (serverName && serverGb) {
-        ns.purchaseServer(serverName, serverGb);
+        ns.purchaseServer(P_SERVER_PREFIX + serverName, serverGb);
     }
 }
