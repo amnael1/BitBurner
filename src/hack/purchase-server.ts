@@ -6,7 +6,7 @@ export async function main(ns: NS): Promise<void> {
     const serverGb = ns.args[1];
 
     for (let i = 1; i <= 20; i++) {
-        ns.tprintf("[ %s GB ] -> [ %s $ ]", Math.pow(2, i).toLocaleString("de-CH"), ns.getPurchasedServerCost(Math.pow(2, i)).toLocaleString("de-CH"));
+        ns.tprintf("[ %s GB ] => [ %s $ ]", Math.pow(2, i).toLocaleString("de-CH"), ns.getPurchasedServerCost(Math.pow(2, i)).toLocaleString("de-CH"));
     }
 
     if (serverName && serverGb) {

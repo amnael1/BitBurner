@@ -1,7 +1,6 @@
 import { NS } from '@ns'
+import { GROWTH_MULTIPLIER, MONEY_TO_STEAL_IN_PROCENT } from 'libs/constants';
 
-const MONEY_TO_STEAL_IN_PROCENT = 30;
-const GROWTH_MULTIPLIER = 1.5;
 const SLEEP_TIMEOUT_BUFFER = 500;
 
 export async function main(ns: NS): Promise<void> {
@@ -40,15 +39,15 @@ export async function main(ns: NS): Promise<void> {
 
             const copied = await ns.scp(getWeakenScriptName(), masterServer);
 
-            ns.printf("weaken.script copied [ %t ]", copied);
+            ns.printf("weaken script copied [ %t ]", copied);
 
             const processId = ns.exec(getWeakenScriptName(), masterServer, usedThreads, targetServer);
 
-            ns.printf("weaken.script process created [ %t ]", (processId > 0));
+            ns.printf("weaken process created [ %t ]", (processId > 0));
 
             await ns.sleep(neededWeakenTime);
 
-            ns.printf("weaken.script process killed [ %t ]", ns.kill(processId, masterServer));
+            ns.printf("weaken process killed [ %t ]", ns.kill(processId, masterServer));
 
         } else if (serverMoneyAvailable < serverMaxMoney) {
             // Add buffer of 200ms
@@ -60,15 +59,15 @@ export async function main(ns: NS): Promise<void> {
 
             const copied = await ns.scp(getGrowScriptName(), masterServer);
 
-            ns.printf("grow.script copied [ %t ]", copied);
+            ns.printf("grow script copied [ %t ]", copied);
 
             const processId = ns.exec(getGrowScriptName(), masterServer, usedThreads, targetServer);
 
-            ns.printf("grow.script process created [ %t ]", (processId > 0));
+            ns.printf("grow process created [ %t ]", (processId > 0));
 
             await ns.sleep(neededGrowTime);
 
-            ns.printf("grow.script process killed [ %t ]", ns.kill(processId, masterServer));
+            ns.printf("grow process killed [ %t ]", ns.kill(processId, masterServer));
 
         } else {
             const neededHackTime = getSleepTimeout(ns.getHackTime(targetServer));
@@ -79,15 +78,15 @@ export async function main(ns: NS): Promise<void> {
 
             const copied = await ns.scp(getHackScriptName(), masterServer);
 
-            ns.printf("hack.script copied [ %t ]", copied);
+            ns.printf("hack script copied [ %t ]", copied);
 
             const processId = ns.exec(getHackScriptName(), masterServer, usedThreads, targetServer);
 
-            ns.printf("hack.script process created [ %t ]", (processId > 0));
+            ns.printf("hack process created [ %t ]", (processId > 0));
 
             await ns.sleep(neededHackTime);
 
-            ns.printf("hack.script process killed [ %t ]", ns.kill(processId, masterServer));
+            ns.printf("hack process killed [ %t ]", ns.kill(processId, masterServer));
         }
     }
 }
@@ -165,13 +164,13 @@ function getNeededThreadsForHack(ns: NS, possibleProcentToHack: number): number 
 }
 
 function getWeakenScriptName(): string {
-    return "/hack/basic/weaken.script";
+    return "/hack/basic/weaken.js";
 }
 
 function getGrowScriptName(): string {
-    return "/hack/basic/grow.script";
+    return "/hack/basic/grow.js";
 }
 
 function getHackScriptName(): string {
-    return "/hack/basic/hack.script";
+    return "/hack/basic/hack.js";
 }

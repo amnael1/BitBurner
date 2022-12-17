@@ -16,16 +16,13 @@ export async function main(ns: NS): Promise<void> {
             const equipmentCost = ns.gang.getEquipmentCost(equipment);
 
             if (playerMoney < equipmentCost) {
-                ns.tprintf("Can not buy equipment [ %s ]", equipment);
                 continue;
             }
 
             const purchased = ns.gang.purchaseEquipment(gangMember, equipment);
 
             if (purchased) {
-                ns.tprintf("Equipment purchased [ %s ]", purchased);
-            } else {
-                ns.tprintf("Can not buy equipment [ %s ]", equipment);
+                ns.tprintf("[ %s ] Equipment purchased => [ %s ]", gangMember, purchased);
             }
         }
     }
