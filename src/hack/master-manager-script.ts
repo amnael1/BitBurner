@@ -3,7 +3,7 @@ import { getServersWithAdminRights } from 'libs/helpers';
 import { HOME_SERVER } from 'libs/constants';
 import { ServerTarget } from 'models/server-target';
 
-const MAX_SERVERS_TO_HACK = 1;
+const MAX_SERVERS_TO_HACK = -1;
 
 export async function main(ns: NS): Promise<void> {
 
@@ -17,7 +17,7 @@ export async function main(ns: NS): Promise<void> {
     let counter = 0;
 
     for (const item of serversToHack) {
-        if (counter >= MAX_SERVERS_TO_HACK) {
+        if (MAX_SERVERS_TO_HACK !== -1 && counter >= MAX_SERVERS_TO_HACK) {
             break;
         }
 

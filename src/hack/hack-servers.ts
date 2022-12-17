@@ -109,9 +109,9 @@ function getRootAccess(ns: NS, server: string): void {
 }
 
 function logRootServerInfo(ns: NS, server: string): void {
-    const maxRam = ns.getServerMaxRam(server);
+    const serverInfo = ns.getServer(server);
 
-    ns.tprintf("Root access [ %s ]", server);
-    ns.tprintf("Max ram [ %d ]", maxRam);
+    ns.tprintf("Root access [ %s ] => [ %t ]", server, serverInfo.hasAdminRights);
+    ns.tprintf("Max ram [ %d ]", serverInfo.maxRam);
     ns.tprintf("*******************")
 }
