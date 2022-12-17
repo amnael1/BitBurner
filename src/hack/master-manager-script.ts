@@ -8,9 +8,7 @@ const MAX_SERVERS_TO_HACK = 1;
 export async function main(ns: NS): Promise<void> {
 
     const masterServers = ns.getPurchasedServers();
-    masterServers.push(HOME_SERVER);
-
-    const serversToHack = getServersWithAdminRights(ns, MASTER_SERVERS);
+    const serversToHack = getServersWithAdminRights(ns, masterServers);
 
     killScriptsOnMaster(ns, serversToHack);
 

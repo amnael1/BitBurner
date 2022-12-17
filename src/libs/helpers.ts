@@ -2,14 +2,18 @@ import { NS } from '@ns'
 import { ServerTarget } from 'models/server-target';
 import { HOME_SERVER, P_SERVER_PREFIX } from 'libs/constants';
 
-export function getServersWithAdminRights(ns: NS, masterServers: []): ServerTarget[] {
-    const foundServers = findServers(ns).filter(server => {
+export function getServersWithAdminRights(ns: NS, masterServers: string[]): ServerTarget[] {
+    const foundServers = getServersWithAdminRightsWithoutTarget();
+
+    return getMasterTargets(foundServers, masterServers);
+}
+
+export function getServersWithAdminRightsWithoutTarget(ns: NS): string[] {
+    return findServers(ns).filter(server => {
         const serverInfo = ns.getServer(server);
 
         return serverInfo.hasAdminRights;
     });
-
-    return getMasterTargets(foundServers, masterServers);
 }
 
 export function getServersWithoutAdminRights(ns: NS): string[] {
