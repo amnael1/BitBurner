@@ -3,17 +3,24 @@ import { getServerPath, getServersWithAdminRightsWithoutTarget } from 'libs/help
 import { HOME_SERVER } from 'libs/constants';
 
 export async function main(ns : NS) : Promise<void> {
-    const servers = getServersWithAdminRightsWithoutTarget(ns);
+    const servers = getServersWithAdminRightsWithoutTarget(ns).filter(server => {
+        const serverInfo = ns.getServer(server);
+
+        return !serverInfo.backdoorInstalled;
+    });
+
+    ns.tprintf("START [ %s ]", new Date().toLocaleString("de-CH"));
 
     for(const server of servers) {
         const serverPath = getServerPath(ns, server);
+        
+        ns.tprintf("----------------------------");
+        ns.tprintf("Find path for server [ %s ]", server);
 
         for(let i = 1; i <= serverPath.length; i++) {
-            if(serverPath[0] === HOME_SERVER) {
-                continue;
-            }
-
             if(i === serverPath.length) {
+                ns.tprintf("Installing backdoor [ %s ]...", server);
+
                 await ns.singularity.installBackdoor();
             } else {
                 const connected = await ns.singularity.connect(serverPath[i]);
@@ -21,5 +28,11 @@ export async function main(ns : NS) : Promise<void> {
                 ns.tprintf("Server connected [ %s ] => [ %t ]", serverPath[i], connected);
             }
         }
+
+        ns.tprintf("Backdoor installed [ %s ] => [ %t ]", server, ns.getServer(server).backdoorInstalled);
+        
+        await ns.singularity.connect(HOME_SERVER);
     }
+
+    ns.tprintf("DONE [ %s ]", new Date().toLocaleString("de-CH"));
 }

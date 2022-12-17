@@ -15,7 +15,7 @@ export async function main(ns: NS): Promise<void> {
 
 }
 
-function applyTask(ns: NS, memeber: string, taskName: string) {
+function applyTask(ns: NS, member: string, taskName: string) {
     /*
     const memberInfo = ns.gang.getMemberInformation(member);
     const cha = memberInfo.cha;

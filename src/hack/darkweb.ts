@@ -12,7 +12,7 @@ function buyTorRouter(ns: NS): void {
 }
 
 function buyDarkWebPrograms(ns: NS): void {
-    const darkWebPrograms = ns.singularity.getDarkwebProgramCost();
+    const darkWebPrograms = ns.singularity.getDarkwebPrograms();
 
     for (const darkWebProgram of darkWebPrograms) {
         const darkWebProgramCost = ns.singularity.getDarkwebProgramCost(darkWebProgram);

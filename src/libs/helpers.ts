@@ -3,7 +3,7 @@ import { ServerTarget } from 'models/server-target';
 import { HOME_SERVER, P_SERVER_PREFIX } from 'libs/constants';
 
 export function getServersWithAdminRights(ns: NS, masterServers: string[]): ServerTarget[] {
-    const foundServers = getServersWithAdminRightsWithoutTarget();
+    const foundServers = getServersWithAdminRightsWithoutTarget(ns);
 
     return getMasterTargets(foundServers, masterServers);
 }
@@ -35,6 +35,8 @@ export function getServerPath(ns: NS, server: string, startServer = HOME_SERVER)
     for (const i in route) {
         result.push(route[i]);
     }
+
+    return result;
 }
 
 function getMasterTargets(foundServers: string[], masterServers: string[]): ServerTarget[] {
@@ -89,7 +91,7 @@ function recursiveScan(ns: NS, parent: string, server: string, target: string, r
             return true;
         }
 
-        if (recursiveScan(server, child, target, route)) {
+        if (recursiveScan(ns, server, child, target, route)) {
             route.unshift(server);
             return true;
         }

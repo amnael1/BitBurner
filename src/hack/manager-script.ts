@@ -11,8 +11,8 @@ export async function main(ns: NS): Promise<void> {
 
         await ns.sleep(SLEEP_TIMEOUT_BUFFER);
 
-        const masterServer = getMasterServer();
-        const targetServer = getTargetServer();
+        const masterServer = getMasterServer(ns);
+        const targetServer = getTargetServer(ns);
         const serverSecurityLevel = ns.getServerSecurityLevel(targetServer);
         const serverMinSecurityLevel = ns.getServerMinSecurityLevel(targetServer);
 
@@ -107,7 +107,7 @@ function getUsedThreadsForGrow(ns: NS, targetServer: string, possibleThreadsForG
 
 function getUsedThreadsForHack(ns: NS, targetServer: string, possibleThreadsForHack: number): number {
     const possibleProcentToHack = ns.hackAnalyze(targetServer) * 100;
-    const neededThreads = getNeededThreadsForHack(possibleProcentToHack);
+    const neededThreads = getNeededThreadsForHack(ns, possibleProcentToHack);
 
     return getUsedThreads(ns, neededThreads, possibleThreadsForHack);
 }
