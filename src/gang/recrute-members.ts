@@ -7,9 +7,11 @@ export async function main(ns : NS) : Promise<void> {
         const recrued = ns.gang.recruitMember(memberName);
 
         if(recrued) {
-            ns.gang.setMemberTask(memberName, "Train Combat");
+            const taskApplied = ns.gang.setMemberTask(memberName, "Train Combat");
+
+            ns.tprintf("[ %s ] Task applied => [ %t ]", memberName, taskApplied);
         } else {
-            ns.tprintf("Can not recrute new member [ %s ]", memberName)
+            ns.tprintf("[ %s ] Can not recrute new member", memberName)
         }
     }
 }
