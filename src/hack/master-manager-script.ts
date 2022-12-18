@@ -81,7 +81,7 @@ function getManagerScriptName(): string {
 }
 
 function getMaxServersToHack(ns: NS): number {
-    if(ns.args[0] === undefined) {
+    if(ns.args[0] === undefined || ns.args[0] <= 0) {
         return -1;
     }
 

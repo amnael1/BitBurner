@@ -22,7 +22,7 @@ export async function main(ns: NS): Promise<void> {
             const purchased = ns.gang.purchaseEquipment(gangMember, equipment);
 
             if (purchased) {
-                ns.tprintf("[ %s ] Equipment purchased => [ %s ]", gangMember, purchased);
+                ns.tprintf("[ %s ] Equipment [ %s ] purchased => [ %s ]", gangMember, equipment, purchased);
             }
         }
     }
