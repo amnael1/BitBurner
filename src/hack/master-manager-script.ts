@@ -3,13 +3,16 @@ import { getServersWithAdminRights } from 'libs/helpers';
 import { HOME_SERVER } from 'libs/constants';
 import { ServerTarget } from 'models/server-target';
 
-const MAX_SERVERS_TO_HACK = 2;
-
 export async function main(ns: NS): Promise<void> {
+    const maxServersToHack = getMaxServersToHack(ns);
+    const useHomeAsMaster = getUseHomeAsMaster(ns);
 
     const masterServers = ns.getPurchasedServers();
-    masterServers.push(HOME_SERVER);
-    
+
+    if(useHomeAsMaster) {
+        masterServers.push(HOME_SERVER);
+    }
+
     const serversToHack = getServersWithAdminRights(ns, masterServers);
 
     killScriptsOnMaster(ns, serversToHack);
@@ -19,7 +22,7 @@ export async function main(ns: NS): Promise<void> {
     let counter = 0;
 
     for (const item of serversToHack) {
-        if (MAX_SERVERS_TO_HACK !== -1 && counter >= MAX_SERVERS_TO_HACK) {
+        if (maxServersToHack !== -1 && counter >= maxServersToHack) {
             break;
         }
 
@@ -75,4 +78,20 @@ function getMasterServers(serversToHack: ServerTarget[]): string[] {
 
 function getManagerScriptName(): string {
     return "/hack/manager-script.js";
+}
+
+function getMaxServersToHack(ns: NS): number {
+    if(ns.args[0] === undefined) {
+        return -1;
+    }
+
+    return (ns.args[0]) as number;
+}
+
+function getUseHomeAsMaster(ns: NS): boolean {
+    if(ns.args[1] === undefined) {
+        return false;
+    }
+
+    return (ns.args[1]) as boolean;
 }
