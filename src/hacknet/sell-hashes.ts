@@ -4,22 +4,26 @@ import { HacknetUpgrade } from 'models/hacknet-upgrade';
 export async function main(ns : NS) : Promise<void> {
     
     const index = ns.args[0] as number;
-    const hacknetUpgrade = getHacknetUpgrade(ns, index);
+
+    getHacknetUpgrades(ns).forEach(upgrade => ns.tprintf("[ %i ] => [ %s ] Costs [ %d ]", upgrade.index, upgrade.name, upgrade.costs));
+
+    if(index !== undefined) {
+        const hacknetUpgrade = getHacknetUpgrade(ns, index);
     
-    ns.tprintf("Hacknet upgrade [ %s ] at index [ %i ]", hacknetUpgrade.name, index);
-
-    do {
-        const totalHashes = ns.hacknet.numHashes();
-        
-        if(totalHashes >= hacknetUpgrade.costs) {
-            const hashesSpent = ns.hacknet.spendHashes(hacknetUpgrade.name);
-
-            ns.printf("Hashes spent [ %t ]", hashesSpent);
-        }
-
-        await ns.sleep(100);
-    } while(true);
-
+        ns.tprintf("Hacknet upgrade [ %s ] at index [ %i ]", hacknetUpgrade.name, index);
+    
+        do {
+            const totalHashes = ns.hacknet.numHashes();
+            
+            if(totalHashes >= hacknetUpgrade.costs) {
+                const hashesSpent = ns.hacknet.spendHashes(hacknetUpgrade.name);
+    
+                ns.printf("Hashes spent [ %t ]", hashesSpent);
+            }
+    
+            await ns.sleep(50);
+        } while(true);
+    }
 }
 
 function getHacknetUpgrades(ns: NS): HacknetUpgrade[] {
