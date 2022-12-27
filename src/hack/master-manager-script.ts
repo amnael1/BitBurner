@@ -1,12 +1,12 @@
 import { NS } from '@ns'
 import { getServersWithAdminRights } from 'libs/helpers';
-import { HOME_SERVER } from 'libs/constants';
+import { HACKNET_SERVER_PREFIX, HOME_SERVER } from 'libs/constants';
 import { ServerTarget } from 'models/server-target';
 
 export async function main(ns: NS): Promise<void> {
     const maxServersToHack = getMaxServersToHack(ns);
     const useHomeAsMaster = getUseHomeAsMaster(ns);
-
+    const useHacknetServers = getUseHacknetServers(ns);
     const masterServers = ns.getPurchasedServers();
 
     if(useHomeAsMaster) {
@@ -24,6 +24,10 @@ export async function main(ns: NS): Promise<void> {
     for (const item of serversToHack) {
         if (maxServersToHack !== -1 && counter >= maxServersToHack) {
             break;
+        }
+
+        if(item.master !== undefined && useHacknetServers && item.master.startsWith(HACKNET_SERVER_PREFIX)) {
+            continue;
         }
 
         ns.tprintf("--------------------------------");
@@ -94,4 +98,12 @@ function getUseHomeAsMaster(ns: NS): boolean {
     }
 
     return (ns.args[1]) as boolean;
+}
+
+function getUseHacknetServers(ns: NS): boolean {
+    if(ns.args[2] === undefined) {
+        return false;
+    }
+
+    return (ns.args[2]) as boolean;
 }
