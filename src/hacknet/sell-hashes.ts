@@ -21,7 +21,7 @@ export async function main(ns : NS) : Promise<void> {
                 ns.printf("Hashes spent [ %t ]", hashesSpent);
             }
     
-            await ns.sleep(50);
+            await ns.sleep(10);
         } while(true);
     }
 }
