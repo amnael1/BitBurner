@@ -12,3 +12,11 @@ export enum Crime {
     Assassinate = 'Assassinate',
     Heist = 'Heist'
 }
+
+export enum HacknetServerUpgrade {
+    RAM = 'RAM',
+    CACHE = 'CACHE',
+    CORE = 'CORE',
+    LEVEL = 'LEVEL',
+    NONE = 'NONE'
+}
