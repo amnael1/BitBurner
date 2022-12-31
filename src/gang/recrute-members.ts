@@ -3,7 +3,7 @@ import { NS } from '@ns'
 export async function main(ns : NS) : Promise<void> {
 
     do {
-        if(ns.gang.canRecruitMember()) {
+        if(ns.gang.inGang() && ns.gang.canRecruitMember()) {
             const gangMembers = ns.gang.getMemberNames().length;
             const memberName = (gangMembers + 1).toString();
             const recrued = ns.gang.recruitMember(memberName);
@@ -16,7 +16,7 @@ export async function main(ns : NS) : Promise<void> {
                 ns.tprintf("[ %s ] Can not recrute new member", memberName)
             }
         }
-        
+
         await ns.sleep(1000);
     } while(true);
 }

@@ -2,7 +2,7 @@ import { NS } from '@ns'
 
 export async function main(ns: NS): Promise<void> {
 
-    const buyAugmentations = ns.args[0];
+    const buyAugmentations = ns.args[0] as boolean;
     const gangMembers = ns.gang.getMemberNames();
     const equipments = ns.gang.getEquipmentNames();
     const playerMoney = ns.getPlayer().money;
