@@ -26,7 +26,7 @@ export async function main(ns: NS): Promise<void> {
             break;
         }
 
-        if(item.master !== undefined && useHacknetServers && item.master.startsWith(HACKNET_SERVER_PREFIX)) {
+        if(item.master.startsWith(HACKNET_SERVER_PREFIX) || item.target.startsWith(HACKNET_SERVER_PREFIX)) {
             continue;
         }
 
