@@ -20,3 +20,14 @@ export enum HacknetServerUpgrade {
     LEVEL = 'LEVEL',
     NONE = 'NONE'
 }
+
+export enum BladeburnerType {
+    Contract = 'contract',
+    General = 'general'
+}
+
+export enum BladeburnerActionName {
+    Training = 'Training',
+    Tracking = 'Tracking',
+    BountyHunter = 'Bounty Hunter'
+}
