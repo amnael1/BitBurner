@@ -1,6 +1,7 @@
 import { NS, Player } from '@ns'
 import { BladeburnerAction } from 'models/bladeburner-action';
 import { BladeburnerAction, BladeburnerActionName, BladeburnerType } from 'libs/enums';
+import { BladeburnerSkill } from 'models/bladeburner-skill';
 
 export async function main(ns : NS) : Promise<void> {
 
@@ -55,6 +56,8 @@ export async function main(ns : NS) : Promise<void> {
             await ns.sleep(3000);
             continue;
         }
+
+        upgradeSkill(ns);
 
         const contract = getBestContract(ns);
 
@@ -125,7 +128,7 @@ function getCountRemaining(ns: NS, type: string, name: string): number {
 function getEstimatedSuccessChancePercentage(ns: NS, type: string, name: string): number {
     const [minSuccess, maxSuccess] = ns.bladeburner.getActionEstimatedSuccessChance(type, name);
 
-    return (minSuccess / maxSuccess) * 100;
+    return ((minSuccess * 100) + (maxSuccess * 100)) / 2;
 }
 
 function getStaminaPercentage(ns: NS): number {
@@ -143,4 +146,39 @@ function canJoinBladeburner(player: Player) {
         skills.defense >= 100 &&
         skills.agility >= 100
     );
+}
+
+function upgradeSkill(ns: NS): void {
+    const skillPoints = ns.bladeburner.getSkillPoints();
+    const skillToUpgrade = getCheapestSkillUpgrade(ns);
+
+    if(skillPoints >= skillToUpgrade.upgradeCost) {
+        const upgraded = ns.bladeburner.upgradeSkill(skillToUpgrade.name, 1);
+
+        ns.printf("Skill [ %s ] upgraded [ %t ]", skillToUpgrade.name, upgraded);
+    }
+}
+
+function getCheapestSkillUpgrade(ns: NS): BladeburnerSkill {
+    const sorted = getBladeburnerSkills(ns).sort((a, b) => b.upgradeCost > a.upgradeCost ? -1 : 1);
+
+    sorted.forEach(skill => ns.printf("Skill [ %s ] - Upgrade cost [ %d ]", skill.name, skill.upgradeCost));
+
+    return sorted[0];
+}
+
+function getBladeburnerSkills(ns: NS): BladeburnerSkill[] {
+    return [
+        getBladeburnerSkill(ns, "Hyperdrive"),
+        getBladeburnerSkill(ns, "Hands of Midas"),
+        getBladeburnerSkill(ns, "Overclock")
+    ]
+}
+
+function getBladeburnerSkill(ns: NS, name: string): BladeburnerSkill {
+    return {
+        name: name,
+        upgradeCost: ns.bladeburner.getSkillUpgradeCost(name, 1),
+        level: ns.bladeburner.getSkillLevel(name)
+    }
 }
