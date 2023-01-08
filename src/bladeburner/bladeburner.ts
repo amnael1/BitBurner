@@ -1,4 +1,4 @@
-import { NS, Player } from '@ns'
+import { BladeburnerCurAction, NS, Player } from '@ns'
 import { BladeburnerAction } from 'models/bladeburner-action';
 import { BladeburnerAction, BladeburnerActionName, BladeburnerType } from 'libs/enums';
 import { BladeburnerSkill } from 'models/bladeburner-skill';
@@ -24,36 +24,22 @@ export async function main(ns : NS) : Promise<void> {
     while(ns.bladeburner.inBladeburner()) {
         const staminaPercentage = getStaminaPercentage(ns);
         const currentAction = ns.bladeburner.getCurrentAction();
-        let recovering = false;
+        const trainingTimeout = ns.bladeburner.getActionTime(BladeburnerType.General, BladeburnerActionName.Training);
 
         ns.printf("Stamina precentage [ %d / 100 ]", staminaPercentage);
         
         // Do Training if current stamina to low...
-        if(staminaPercentage <= 50) {
-            const timeout = ns.bladeburner.getActionTime(BladeburnerType.General, BladeburnerActionName.Training);
-
-            if(currentAction.name && currentAction.name.toLowerCase() === BladeburnerActionName.Training) {
-                await ns.sleep(timeout + 150);
-                continue;
-            }
-
+        if(staminaPercentage < 50 && !isCurrentTraining(currentAction)) {
             const started = ns.bladeburner.startAction(BladeburnerType.General, BladeburnerActionName.Training);
 
             if(started) {
-                await ns.sleep(timeout + 150);
-            } else {
-                await ns.sleep(1000);
+                await ns.sleep(trainingTimeout + 150);
+                continue;
             }
-
-            continue;
         }
 
-        if(staminaPercentage < 95 && currentAction.name.toLowerCase() === BladeburnerActionName.Training) {
-            recovering = true;
-        }
-        
-        if(recovering) {
-            await ns.sleep(3000);
+        if(staminaPercentage < 95 && isCurrentTraining(currentAction)) {
+            await ns.sleep(trainingTimeout + 150);
             continue;
         }
 
@@ -77,6 +63,10 @@ export async function main(ns : NS) : Promise<void> {
     }
 }
 
+function isCurrentTraining(currentAction: BladeburnerCurAction) {
+    return (currentAction.name && currentAction.name === BladeburnerActionName.Training)
+}
+
 function getBestContract(ns: NS): BladeburnerAction | undefined {
     const contracts = getContracts(ns).filter(contract => {
         return (contract.contractsRemaining > 0 && contract.successChance >= 80)
@@ -85,7 +75,7 @@ function getBestContract(ns: NS): BladeburnerAction | undefined {
     if(contracts.length > 0) {
         const sorted = contracts.sort((a, b) => (a.reputationGain > b.reputationGain) ? -1 : 1);
 
-        sorted.forEach(contract => ns.printf("Contract [ %s ] - Reputation gain [ %d ]", contract.name, contract.reputationGain));
+        sorted.forEach(contract => ns.printf("Contract [ %s ] - Reputation gain [ %d ]", contract.name, contract.reputationGain * 100));
 
         return sorted[0];
     }
@@ -162,8 +152,6 @@ function upgradeSkill(ns: NS): void {
 function getCheapestSkillUpgrade(ns: NS): BladeburnerSkill {
     const sorted = getBladeburnerSkills(ns).sort((a, b) => b.upgradeCost > a.upgradeCost ? -1 : 1);
 
-    sorted.forEach(skill => ns.printf("Skill [ %s ] - Upgrade cost [ %d ]", skill.name, skill.upgradeCost));
-
     return sorted[0];
 }
 
@@ -171,7 +159,8 @@ function getBladeburnerSkills(ns: NS): BladeburnerSkill[] {
     return [
         getBladeburnerSkill(ns, "Hyperdrive"),
         getBladeburnerSkill(ns, "Hands of Midas"),
-        getBladeburnerSkill(ns, "Overclock")
+        getBladeburnerSkill(ns, "Overclock"),
+        getBladeburnerSkill(ns, "Short-Circuit")
     ]
 }
 
