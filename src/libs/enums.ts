@@ -29,5 +29,6 @@ export enum BladeburnerType {
 export enum BladeburnerActionName {
     Training = 'Training',
     Tracking = 'Tracking',
-    BountyHunter = 'Bounty Hunter'
+    BountyHunter = 'Bounty Hunter',
+    Retirement = 'Retirement'
 }

@@ -86,7 +86,8 @@ function getBestContract(ns: NS): BladeburnerAction | undefined {
 function getContracts(ns: NS): BladeburnerAction[] {
     return [
         getBladeburnerAction(ns, BladeburnerType.Contract, BladeburnerActionName.Tracking),
-        getBladeburnerAction(ns, BladeburnerType.Contract, BladeburnerActionName.BountyHunter)
+        getBladeburnerAction(ns, BladeburnerType.Contract, BladeburnerActionName.BountyHunter),
+        getBladeburnerAction(ns, BladeburnerType.Contract, BladeburnerActionName.Retirement)
     ]
 }
 
@@ -150,7 +151,9 @@ function upgradeSkill(ns: NS): void {
 }
 
 function getCheapestSkillUpgrade(ns: NS): BladeburnerSkill {
-    const sorted = getBladeburnerSkills(ns).sort((a, b) => b.upgradeCost > a.upgradeCost ? -1 : 1);
+    const sorted = getBladeburnerSkills(ns)
+                    .sort((a, b) => b.upgradeCost > a.upgradeCost ? -1 : 1)
+                    .filter(skill => (skill.maxLevel === -1) || skill.maxLevel !== skill.level);
 
     return sorted[0];
 }
@@ -159,15 +162,18 @@ function getBladeburnerSkills(ns: NS): BladeburnerSkill[] {
     return [
         getBladeburnerSkill(ns, "Hyperdrive"),
         getBladeburnerSkill(ns, "Hands of Midas"),
-        getBladeburnerSkill(ns, "Overclock"),
-        getBladeburnerSkill(ns, "Short-Circuit")
+        getBladeburnerSkill(ns, "Overclock", 90),
+        getBladeburnerSkill(ns, "Short-Circuit"),
+        getBladeburnerSkill(ns, "Blade's Intuition"),
+        getBladeburnerSkill(ns, "Digital Observer")
     ]
 }
 
-function getBladeburnerSkill(ns: NS, name: string): BladeburnerSkill {
+function getBladeburnerSkill(ns: NS, name: string, maxLevel = -1): BladeburnerSkill {
     return {
         name: name,
         upgradeCost: ns.bladeburner.getSkillUpgradeCost(name, 1),
-        level: ns.bladeburner.getSkillLevel(name)
+        level: ns.bladeburner.getSkillLevel(name),
+        maxLevel: maxLevel
     }
 }
